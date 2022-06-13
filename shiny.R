@@ -1,7 +1,55 @@
 library(shiny)
-modifiedtiktok <- read_excel("code/python/pythonpractice/tiktok/modifiedtiktok.xlsx")
-ui <- fluidPage()
+library(ggplot2)
+library(gridExtra)
+library(readxl)
+modifiedtiktok2 <- read_excel("~/Documents/Datasets/modifiedtiktok2.xlsx")
+ui <- fluidPage(
+  theme = bslib::bs_theme(bootswatch = "darkly"),
+  titlePanel("Tiktok Popular Songs"),
+  sidebarLayout(
+    
+    #inputs: select variables to plot
+    sidebarPanel(
+      
+      # select variable for y-axis
+      selectInput(
+        inputId = "y",
+        label = "Y-axis",
+        choices = c("danceability", "energy", "loudness", "speechiness", 
+                    "acousticness", "liveness", "valence", "tempo"),
+        selected = "danceability"
+      ),
+      selectInput(
+        inputId = "x",
+        label = "X-axis",
+        choices = c("danceability", "energy", "loudness", "speechiness", 
+                    "acousticness", "liveness", "valence", "tempo"),
+        selected = "energy")
+  ),
+  
+  # Select variable for color
+  selectInput(inputId = "z", 
+              label = "Color by:",
+              choices = c("danceability", "energy", "loudness", "speechiness", 
+                          "acousticness", "liveness", "valence", "tempo"),
+              selected = "loudness")
+  
+  ),
+  # Output: Show scatterplot
+  mainPanel(
+    plotOutput(outputId = "scatterplot")
+  )
+)
 
-server <- function(input, output, session) {}
 
-shinyApp(ui = ui, server = server)
+server <- function(input, output, session) {
+  thematic::thematic_shiny()
+  output$scatterplot <- renderPlot({
+    ggplot(data = modifiedtiktok2, aes_string(x = input$x, y = input$y, color = input$z)) + 
+      geom_point()
+  })
+
+
+}
+# create a shiny app object
+shinyApp(ui, server)
