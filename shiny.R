@@ -1,5 +1,6 @@
 library(shiny)
 library(ggplot2)
+library(plotly)
 library(gridExtra)
 library(readxl)
 modifiedtiktok2 <- read_excel("~/Documents/Datasets/modifiedtiktok2.xlsx")
@@ -37,16 +38,16 @@ ui <- fluidPage(
   ),
   # Output: Show scatterplot
   mainPanel(
-    plotOutput(outputId = "scatterplot")
+    plotlyOutput("scatterplot")
   )
 )
 
 
 server <- function(input, output, session) {
   thematic::thematic_shiny()
-  output$scatterplot <- renderPlot({
-    ggplot(data = modifiedtiktok2, aes_string(x = input$x, y = input$y, color = input$z)) + 
-      geom_point()
+  output$scatterplot <- renderPlotly({
+    ggplot(data = modifiedtiktok2, aes_string(x = input$x, y = input$y, 
+          color = input$z)) + geom_point(aes(text = track_name))
   })
 
 
