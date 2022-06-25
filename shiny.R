@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(plotly)
-library(gridExtra)
+library(cowplot)
 library(readxl)
 modifiedtiktok2 <- read_excel("~/Documents/Datasets/modifiedtiktok2.xlsx")
 ui <- fluidPage(
@@ -38,7 +38,8 @@ ui <- fluidPage(
   ),
   # Output: Show scatterplot
   mainPanel(
-    plotlyOutput("scatterplot")
+    plotlyOutput("scatterplot"),
+    plotlyOutput("histogram")
   )
 )
 
@@ -47,9 +48,14 @@ server <- function(input, output, session) {
   thematic::thematic_shiny()
   output$scatterplot <- renderPlotly({
     ggplot(data = modifiedtiktok2, aes_string(x = input$x, y = input$y, 
-          color = input$z)) + geom_point(aes(text = track_name))
+          color = input$z)) + geom_point(aes(text = 
+                                               paste("Song Info:", 
+                                                          track_name, 
+                                                          "by", artist_name )))
   })
-
+  output$histogram <- renderPlotly({
+    ggplot(data = modifiedtiktok2, aes_string(x = input$x)) + geom_histogram()
+  })
 
 }
 # create a shiny app object
