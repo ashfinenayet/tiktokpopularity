@@ -24,7 +24,7 @@ ui <- fluidPage(
         inputId = "x",
         label = "X-axis",
         choices = c("danceability", "energy", "loudness", "speechiness", 
-                    "acousticness", "liveness", "valence", "tempo"),
+                    "acousticness", "liveness", "valence", "tempo", "popularity"),
         selected = "energy")
   ),
   
@@ -32,8 +32,8 @@ ui <- fluidPage(
   selectInput(inputId = "z", 
               label = "Color by:",
               choices = c("danceability", "energy", "loudness", "speechiness", 
-                          "acousticness", "liveness", "valence", "tempo"),
-              selected = "loudness")
+                          "acousticness", "liveness", "valence", "tempo", "popularity"),
+              selected = "popularity")
   
   ),
   # Output: Show scatterplot
